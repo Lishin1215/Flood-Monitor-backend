@@ -1,0 +1,23 @@
+import requests
+import logging
+
+
+class FloodInfoService:
+    API_URL = "https://environment.data.gov.uk/flood-monitoring"
+    
+
+    def get_stations(self):
+        try:
+            response = requests.get(self.API_URL + "/id/stations")
+            response.raise_for_status()
+            data = response.json()
+
+            return data
+        except requests.RequestException as e:
+            logging.error(f"API request failed: {str(e)}")
+            raise Exception("API request failed")
+
+
+f = FloodInfoService()
+print(f.get_stations())
+  
