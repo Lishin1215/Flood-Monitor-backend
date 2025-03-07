@@ -1,4 +1,5 @@
-from flask import Flask, jsonify
+import logging
+from flask import Flask, jsonify, request
 from services.flood_info_service import FloodInfoService
 
 app = Flask(__name__)
@@ -21,7 +22,7 @@ def get_stations():
             for station in data["items"]
         ]
 
-        return json({"stations": station_catchments})
+        return jsonify({"stations": station_catchments})
     except Exception as e:
         logging.error(f"Error in get_stations: {str(e)}")
         return jsonify({"error": "Failed to fetch stations"}), 500
