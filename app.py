@@ -32,20 +32,25 @@ def get_stations():
 def get_measurement(station_id):
     try:
         data = service.get_measurement(station_id)
-
-        if "error" in data:
-            return jsonify(data), 404
         
         if "items" not in data:
             return jsonify({"error": "No measurement data found"}), 404
         
-        measurements = [
-            {
-                "parameterName": measure.get("parameterName", "Unknown"),
-                "qualifier": measure.get("qualifier", "Unknown")
-            }
-            for measure in data["items"]
-        ]
+        measurements = []
+        for measure in data["items"]:
+            notation = measure.get("notation", "Unknown")
+
+            #check if each measure has "readings"
+            readings_data = service.get_particular_M(notation)
+
+            has_data = bool(readings_data.get("items"))
+        
+            measurements.append({
+                    "parameterName": measure.get("parameterName", "Unknown"),
+                    "qualifier": measure.get("qualifier", "Unknown"),
+                    "notaion": notation,
+                    "hasData": has_data
+            })
 
         return jsonify({"measurements": measurements})
     except Exception as e:
@@ -53,10 +58,28 @@ def get_measurement(station_id):
         return jsonify({"error": "Failed to fetch measurement data"}), 500
 
 
-@app.route("/get-particular-M", methods=["GET"])
-def get_particular_M(): 
-    station_id = request.args.get("station-id")
-    measurement = request.args.get("measurement")
-    qualifier = request.args.get("qualifier")
-    pass
+@app.route("/get-particular-M/<notation>", methods=["GET"])
+def get_particular_M(notation): 
+    try:
+        data = service.get_particular_M(notation)
+
+        if "items" not in data or not data["items"]:
+            return jsonify({"readings": [], "hasData": False})
+        
+        readings = [
+            {
+                "dateTime": reading.get("dateTime", "Unknown"),
+                "value": reading.get("value", "Unknown")
+            }
+            for reading in data["items"]
+        ]
+
+        return jsonify({"readings": readings, "hasData": True})
+    except Exception as e:
+        logging.error(f"Error in get_particular_M: {str(e)}")
+        return jsonify({"error": "Failed to fetch measurement data"}), 500
+
+
+
+    
         
