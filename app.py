@@ -41,7 +41,7 @@ def get_measurement(station_id):
         
         measurements = [
             {
-                "parameterName": measure.get("parameterName", "Unknown")
+                "parameterName": measure.get("parameterName", "Unknown"),
                 "qualifier": measure.get("qualifier", "Unknown")
             }
             for measure in data["items"]
