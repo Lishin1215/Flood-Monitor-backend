@@ -40,18 +40,22 @@ def test_get_measurement_success(mock_get_measurement, client):
     mock_get_measurement.return_value = {
         "items": [
             {
+                "notation" : "F1906-level-stage-i-15_min-m" ,
+                "parameter" : "level" ,
                 "parameterName" : "Water Level" ,
                 "period" : 900 ,
                 "qualifier" : "Stage" ,
                 "station" : "http://environment.data.gov.uk/flood-monitoring/id/stations/F1906" ,
-                "stationReference" : "F1906" 
+                "stationReference" : "F1906"
             },
             {
+                "notation" : "F1906-flow-logged-i-15_min-m3_s" ,
+                "parameter" : "flow" ,
                 "parameterName" : "Flow" ,
                 "period" : 900 ,
                 "qualifier" : "Logged" ,
-                "station" : "http://environment.data.gov.uk/flood-monitoring/id/stations/F1906" , 
-                "stationReference" : "F1906" 
+                "station" : "http://environment.data.gov.uk/flood-monitoring/id/stations/F1906" ,
+                "stationReference" : "F1906"
             }
         ]
     }
@@ -64,11 +68,16 @@ def test_get_measurement_success(mock_get_measurement, client):
     assert len(data["measurements"])==2
     assert data["measurements"][0]["parameterName"] == "Water Level"
     assert data["measurements"][0]["qualifier"] == "Stage"
+    assert data["measurements"][0]["notation"] == "F1906-level-stage-i-15_min-m"
+    assert data["measurements"][0]["hasData"] is True
     assert data["measurements"][1]["parameterName"] == "Flow"
     assert data["measurements"][1]["qualifier"] == "Logged"
+    assert data["measurements"][1]["notation"] == "F1906-flow-logged-i-15_min-m3_s"
+    assert data["measurements"][1]["hasData"] is False
+
 
 @patch("services.flood_info_service.FloodInfoService.get_particular_M")
-def test_get_particular_M(mock_get_particular_M, client):
+def test_get_particular_M_success(mock_get_particular_M, client):
     mock_get_particular_M.return_value = {
         "items": [
             {
@@ -95,7 +104,7 @@ def test_get_particular_M(mock_get_particular_M, client):
     assert data["hasData"] is True
     assert data["readings"][0]["dateTime"] == "2025-03-06T22:30:00Z"
     assert data["readings"][0]["value"] == 0.284
-    assert data["readings"][1]["dataTime"] == "2025-03-06T22:15:00Z"
+    assert data["readings"][1]["dateTime"] == "2025-03-06T22:15:00Z"
     assert data["readings"][1]["value"] == 0.285
 
 

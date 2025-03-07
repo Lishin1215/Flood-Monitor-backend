@@ -48,7 +48,7 @@ def get_measurement(station_id):
             measurements.append({
                     "parameterName": measure.get("parameterName", "Unknown"),
                     "qualifier": measure.get("qualifier", "Unknown"),
-                    "notaion": notation,
+                    "notation": notation,
                     "hasData": has_data
             })
 
