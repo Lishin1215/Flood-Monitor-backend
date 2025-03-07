@@ -16,8 +16,25 @@ class FloodInfoService:
         except requests.RequestException as e:
             logging.error(f"API request failed: {str(e)}")
             raise Exception("API request failed")
+        
+
+    def get_measurement(self, station_id):
+        try:
+            response = requests.get(f"{self.API_URL}/id/stations/{station_id}/measures")
+            response.raise_for_status
+            data = response.json()
+
+            return data
+        except requests.RequestException as e:
+            logging.error(f"API request failed for station {station_id}: {str(e)}")
+            return {"error":"API request failed"}
+
 
 
 f = FloodInfoService()
-print(f.get_stations())
+# print(f.get_stations())
+print(f.get_measurement(station_id="1029TH"))
   
+
+    
+    

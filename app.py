@@ -30,7 +30,27 @@ def get_stations():
 
 @app.route("/get-measurement/<station_id>", methods=["GET"])
 def get_measurement(station_id):
-    pass
+    try:
+        data = service.get_measurement(station_id)
+
+        if "error" in data:
+            return jsonify(data), 404
+        
+        if "items" not in data:
+            return jsonify({"error": "No measurement data found"}), 404
+        
+        measurements = [
+            {
+                "parameterName": measure.get("parameterName", "Unknown")
+                "qualifier": measure.get("qualifier", "Unknown")
+            }
+            for measure in data["items"]
+        ]
+
+        return jsonify({"measurements": measurements})
+    except Exception as e:
+        logging.error(f"Error in get_measurement: {str(e)}")
+        return jsonify({"error": "Failed to fetch measurement data"}), 500
 
 
 @app.route("/get-particular-M", methods=["GET"])
