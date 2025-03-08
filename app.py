@@ -79,6 +79,8 @@ def get_particular_M(notation):
         logging.error(f"Error in get_particular_M: {str(e)}")
         return jsonify({"error": "Failed to fetch measurement data"}), 500
 
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=5000, debug=True)
 
 
     
