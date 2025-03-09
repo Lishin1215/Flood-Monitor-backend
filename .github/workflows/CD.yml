@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: AWS_EC2
 
     steps:
       - name: Checkout Repository #取得最新代碼
