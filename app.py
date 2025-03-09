@@ -1,9 +1,10 @@
 import logging
 from flask import Flask, jsonify, request
 from services.flood_info_service import FloodInfoService
+from flask_cors import CORS
 
 app = Flask(__name__)
-
+CORS(app)
 service = FloodInfoService()
 
 @app.route("/get-stations", methods=["GET"])
