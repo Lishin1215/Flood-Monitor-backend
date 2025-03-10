@@ -1,6 +1,7 @@
 import requests
 import logging
 from datetime import datetime, timedelta
+import sentry_sdk
 
 
 class FloodInfoService:
@@ -15,7 +16,8 @@ class FloodInfoService:
 
             return data
         except requests.RequestException as e:
-            logging.error(f"API request failed: {str(e)}")
+            # logging.error(f"API request failed: {str(e)}")
+            sentry_sdk.capture_exception(e)
             raise Exception("API request failed")
         
 
@@ -27,7 +29,8 @@ class FloodInfoService:
 
             return data
         except requests.RequestException as e:
-            logging.error(f"API request failed for station {station_id}: {str(e)}")
+            # logging.error(f"API request failed for station {station_id}: {str(e)}")
+            sentry_sdk.capture_exception(e)
             return {"error":"API request failed"}
         
     
@@ -40,7 +43,8 @@ class FloodInfoService:
 
             return data
         except requests.RequestException as e:
-            logging.error(f"API request failed for station {notation}: {str(e)}")
+            # logging.error(f"API request failed for station {notation}: {str(e)}")
+            sentry_sdk.capture_exception(e)
             return {"error": "API request failed"}
 
 

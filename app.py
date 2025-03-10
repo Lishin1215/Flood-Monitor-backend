@@ -2,6 +2,14 @@ import logging
 from flask import Flask, jsonify, request
 from services.flood_info_service import FloodInfoService
 from flask_cors import CORS
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn="https://5df63b311348f1d9143639b3a6e790ec@o4508953169821696.ingest.de.sentry.io/4508953293619280",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    send_default_pii=True,
+)
 
 app = Flask(__name__)
 CORS(app)
@@ -25,7 +33,8 @@ def get_stations():
 
         return jsonify({"stations": station_catchments})
     except Exception as e:
-        logging.error(f"Error in get_stations: {str(e)}")
+        # logging.error(f"Error in get_stations: {str(e)}")
+        sentry_sdk.capture_exception(e)
         return jsonify({"error": "Failed to fetch stations"}), 500
 
 
@@ -55,7 +64,8 @@ def get_measurement(station_id):
 
         return jsonify({"measurements": measurements})
     except Exception as e:
-        logging.error(f"Error in get_measurement: {str(e)}")
+        # logging.error(f"Error in get_measurement: {str(e)}")
+        sentry_sdk.capture_exception(e)
         return jsonify({"error": "Failed to fetch measurement data"}), 500
 
 
@@ -77,7 +87,8 @@ def get_particular_M(notation):
 
         return jsonify({"readings": readings, "hasData": True})
     except Exception as e:
-        logging.error(f"Error in get_particular_M: {str(e)}")
+        # logging.error(f"Error in get_particular_M: {str(e)}")
+        sentry_sdk.capture_exception(e)
         return jsonify({"error": "Failed to fetch measurement data"}), 500
 
 if __name__ == "__main__":
