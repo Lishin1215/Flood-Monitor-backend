@@ -1,5 +1,6 @@
 import requests
 import logging
+from datetime import datetime, timedelta
 
 
 class FloodInfoService:
@@ -32,7 +33,8 @@ class FloodInfoService:
     
     def get_particular_M(self, notation):
         try:
-            response = requests.get(f"{self.API_URL}/id/measures/{notation}/readings")
+            since_time = (datetime.utcnow() - timedelta(hours=24).isformat() + "Z") 
+            response = requests.get(f"{self.API_URL}/id/measures/{notation}/readings", params={"since": since_time})
             response.raise_for_status
             data = response.json()
 
