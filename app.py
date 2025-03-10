@@ -3,11 +3,11 @@ from flask import Flask, jsonify, request
 from services.flood_info_service import FloodInfoService
 from flask_cors import CORS
 import sentry_sdk
+from dotenv import load_dotenv
+import os
 
 sentry_sdk.init(
-    dsn="https://5df63b311348f1d9143639b3a6e790ec@o4508953169821696.ingest.de.sentry.io/4508953293619280",
-    # Add data like request headers and IP for users,
-    # see https://docs.sentry.io/platforms/python/data-management/data-collected/ for more info
+    dsn=os.getenv("SENTRY_DSN"),
     send_default_pii=True,
 )
 
