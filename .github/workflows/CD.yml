@@ -22,7 +22,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/Backend
-            git pull origin main
+            git pull git@github.com:Lishin1215/Flood-Monitor-backend.git main
             sudo docker stop flood-monitor || true
             sudo docker rm flood-monitor || true
             sudo docker build -t flood-monitor .
