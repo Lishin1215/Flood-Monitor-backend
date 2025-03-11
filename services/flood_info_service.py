@@ -1,18 +1,38 @@
 import requests
 import logging
+import redis
+import json
 from datetime import datetime, timedelta
 import sentry_sdk
 
 
 class FloodInfoService:
     API_URL = "https://environment.data.gov.uk/flood-monitoring"
+    redis_client = None
     
 
+    def __init__(self):
+        try:
+            self.redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
+        except redis.ConnectionError as e:
+            sentry_sdk.capture_exception(e)
+            self.redis_client = None
+
     def get_stations(self):
+        cache_key = "stations_data"
+        if self.redis_client:
+            cached_data = self.redis_client.get(cache_key)
+            if cached_data:
+                return json.loads(cached_data)
+            
         try:
             response = requests.get(self.API_URL + "/id/stations")
             response.raise_for_status()
             data = response.json()
+
+            if self.redis_client:
+                self.redis_client.setex(cache_key, timedelta(hours=24), json.dumps(data))
+
 
             return data
         except requests.RequestException as e:
@@ -22,10 +42,19 @@ class FloodInfoService:
         
 
     def get_measurement(self, station_id):
+        cache_key = f"measurement_{station_id}"
+        if self.redis_client:
+            cached_data = self.redis_client.get(cache_key)
+            if cached_data:
+                return json.loads(cached_data)
+        
         try:
             response = requests.get(f"{self.API_URL}/id/stations/{station_id}/measures")
             response.raise_for_status
             data = response.json()
+            
+            if self.redis_client:
+                self.redis_client.setex(cache_key, timedelta(hours=24), json.dumps(data))
 
             return data
         except requests.RequestException as e:
