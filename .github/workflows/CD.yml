@@ -26,6 +26,6 @@ jobs:
             sudo docker stop flood-monitor || true
             sudo docker rm flood-monitor || true
             sudo docker build -t flood-monitor .
-            sudo docker run --env-file .env -d -p 5000:5000 flood-monitor
+            sudo docker run -d -p 5000:5000 flood-monitor
             sudo systemctl restart nginx
 
