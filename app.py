@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 import os
 
 sentry_sdk.init(
-    dsn=os.getenv("SENTRY_DSN"),
+    dsn="https://5df63b311348f1d9143639b3a6e790ec@o4508953169821696.ingest.de.sentry.io/4508953293619280",
     send_default_pii=True,
 )
 
