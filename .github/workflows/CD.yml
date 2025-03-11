@@ -21,6 +21,16 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            sudo apt update
+
+            # Install Redis
+            sudo apt install -y redis-server
+
+            sudo systemctl enable redis
+            sudo systemctl start redis
+            redis-cli ping
+
+            # Set up backend
             cd /home/ubuntu/Backend
             git pull git@github.com:Lishin1215/Flood-Monitor-backend.git main
             sudo docker stop flood-monitor || true
