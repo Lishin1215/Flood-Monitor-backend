@@ -14,8 +14,8 @@ class FloodInfoService:
     def __init__(self):
         try:
             self.redis_client = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
+            self.redis_client.ping()
         except redis.ConnectionError as e:
-            sentry_sdk.capture_exception(e)
             self.redis_client = None
 
     def get_stations(self):
