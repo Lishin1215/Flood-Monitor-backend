@@ -67,7 +67,7 @@ class FloodInfoService:
         try:
             since_time = (datetime.utcnow() - timedelta(hours=24)).isoformat() + "Z" 
             response = requests.get(f"{self.API_URL}/id/measures/{notation}/readings", params={"since": since_time})
-            response.raise_for_status
+            response.raise_for_status()
             data = response.json()
 
             return data
