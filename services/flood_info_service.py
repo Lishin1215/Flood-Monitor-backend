@@ -50,7 +50,7 @@ class FloodInfoService:
         
         try:
             response = requests.get(f"{self.API_URL}/id/stations/{station_id}/measures")
-            response.raise_for_status
+            response.raise_for_status()
             data = response.json()
             
             if self.redis_client:
